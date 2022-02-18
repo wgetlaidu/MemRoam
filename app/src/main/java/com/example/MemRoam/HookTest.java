@@ -75,6 +75,7 @@ public class HookTest implements IXposedHookLoadPackage {
         return null;
 
     }
+
     public static Object getFieldOjbect(String class_name, Object obj,
                                         String filedName) {
         try {
@@ -96,6 +97,7 @@ public class HookTest implements IXposedHookLoadPackage {
         return null;
 
     }
+
     public static Field getClassField(ClassLoader classloader, String class_name,
                                       String filedName) {
 
@@ -116,6 +118,7 @@ public class HookTest implements IXposedHookLoadPackage {
         return null;
 
     }
+
     public static ClassLoader getClassloader() {
         ClassLoader resultClassloader = null;
 
@@ -132,6 +135,7 @@ public class HookTest implements IXposedHookLoadPackage {
         resultClassloader = mApplication.getClassLoader();
         return resultClassloader;
     }
+
     public static Object getClassFieldObject(ClassLoader classloader, String class_name, Object obj,
                                              String filedName) {
 
@@ -156,6 +160,7 @@ public class HookTest implements IXposedHookLoadPackage {
         return null;
 
     }
+
     public static String[] getClassNameList(ClassLoader clzloader) throws IOException {
         ClassLoader appClassloader = clzloader;
         List<Object> dexFilesArray = new ArrayList<Object>();
@@ -238,70 +243,111 @@ public class HookTest implements IXposedHookLoadPackage {
         return null;
     }
 
+    private void printDeclaredMethods(Class clz, Method m, int count) {
+
+        switch (count){
+            case 0:{
+                XposedHelpers.findAndHookMethod(clz, m.getName(), new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        Log.e(TAG, "    "+m );
+                        Log.e(TAG, Log.getStackTraceString(new Throwable()) );
+                        Log.e(TAG, "    "+m.getReturnType()+" retval: "+param.getResult() );
+                    }
+                });
+                break;
+            }
+            case 1:{
+                XposedHelpers.findAndHookMethod(clz, m.getName(), m.getParameterTypes()[0].getName(), new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        Log.e(TAG, "    "+m+" param[0]: "+param.args[0] );
+                        Log.e(TAG, Log.getStackTraceString(new Throwable()) );
+                        Log.e(TAG, "    "+m.getReturnType()+"retval: "+param.getResult() );
+                    }
+                });
+                break;
+            }
+            case 2: {
+                XposedHelpers.findAndHookMethod(clz, m.getName(), m.getParameterTypes()[0].getName(), m.getParameterTypes()[1].getName(),
+                        new XC_MethodHook() {
+                            @Override
+                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                Log.e(TAG, "    "+m+" param[0]: " + param.args[0] + " param[1]: " + param.args[1]);
+                                Log.e(TAG, Log.getStackTraceString(new Throwable()) );
+                                Log.e(TAG, "    "+m.getReturnType()+"retval: " + param.getResult());
+                            }
+                        });
+                break;
+            }
+            case 3: {
+                XposedHelpers.findAndHookMethod(clz, m.getName(), m.getParameterTypes()[0].getName(), m.getParameterTypes()[1].getName(),
+                        m.getParameterTypes()[2].getName(), new XC_MethodHook() {
+                            @Override
+                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                Log.e(TAG, "    "+m+" param[0]: " + param.args[0] + " param[1]: " + param.args[1] + " param[2]: " + param.args[2]);
+                                Log.e(TAG, Log.getStackTraceString(new Throwable()) );
+                                Log.e(TAG, "    "+m.getReturnType()+"retval: " + param.getResult());
+                            }
+                        });
+                break;
+            }
+            case 4: {
+                XposedHelpers.findAndHookMethod(clz, m.getName(), m.getParameterTypes()[0].getName(), m.getParameterTypes()[1].getName(),
+                        m.getParameterTypes()[2].getName(), m.getParameterTypes()[3].getName(), new XC_MethodHook() {
+                            @Override
+                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                Log.e(TAG, "    "+m+" param[0]: " + param.args[0] + " param[1]: " + param.args[1] +
+                                        " param[2]: " + param.args[2]+" param[3]: " + param.args[3]);
+                                Log.e(TAG, Log.getStackTraceString(new Throwable()) );
+                                Log.e(TAG, "    "+m.getReturnType()+"retval: " + param.getResult());
+                            }
+                        });
+                break;
+            }
+            case 5: {
+                XposedHelpers.findAndHookMethod(clz, m.getName(), m.getParameterTypes()[0].getName(), m.getParameterTypes()[1].getName(),
+                        m.getParameterTypes()[2].getName(),  m.getParameterTypes()[3].getName(), m.getParameterTypes()[4].getName(), new XC_MethodHook() {
+                            @Override
+                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                Log.e(TAG, "    "+m+" param[0]: " + param.args[0] + " param[1]: " + param.args[1] +
+                                        " param[2]: " + param.args[2]+" param[3]: " + param.args[3]+" param[4]: " + param.args[4]);
+                                Log.e(TAG, Log.getStackTraceString(new Throwable()) );
+                                Log.e(TAG, "    "+m.getReturnType()+"retval: " + param.getResult());
+                            }
+                        });
+                break;
+            }
+        }
+    }
+
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
 
-//        if (loadPackageParam.packageName.equals("com.example.xposedstudy")) {
+//        XposedHelpers.findAndHookMethod(PrivateKeyEntry.class,"getPrivateKey", new XC_MethodHook() {
 //
-//            XposedBridge.log(" has Hooked!");
-//
-//            Class clazz = loadPackageParam.classLoader.loadClass(
-//
-//                    "com.example.xposedstudy.MainActivity");
-//
-//            XposedHelpers.findAndHookMethod(clazz, "toastMessage", new XC_MethodHook() {
-//
-//                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-//
-//                    super.beforeHookedMethod(param);
-//
-//                    //XposedBridge.log(" has Hooked!");
-//
-//                }
-//
-//                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-//
-//                    param.setResult("你已被劫持");
-//
-//                }
-//
-//            });
-//
-//        }
-        XposedHelpers.findAndHookMethod(PrivateKeyEntry.class,"getPrivateKey", new XC_MethodHook() {
 //            @Override
-//            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+//            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 //
-//                super.beforeHookedMethod(param);
-//                XposedBridge.log("KeyStore.load1:"+param.args[0]);
-//                //XposedBridge.log(" has Hooked!");
+//                XposedBridge.log("PrivateKeyEntry:"+param.getResult());
 //
 //            }
-
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-
-                XposedBridge.log("PrivateKeyEntry:"+param.getResult());
-
-            }
-        });
-
-        XposedHelpers.findAndHookMethod(KeyStore.class,"load", InputStream.class, char[].class, new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                XposedBridge.log("KeyStore.load2:"+param.args[0]+ param.args[1]);
-
-            }
-        });
-
-        XposedHelpers.findAndHookMethod(KeyStore.class,"load", InputStream.class, char[].class, new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                XposedBridge.log("KeyStore.load2:"+param.args[0]+ param.args[1]);
-
-            }
-        });
-
-
+//        });
+//
+//        XposedHelpers.findAndHookMethod(KeyStore.class,"load", InputStream.class, char[].class, new XC_MethodHook() {
+//            @Override
+//            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+//                XposedBridge.log("KeyStore.load2:"+param.args[0]+ param.args[1]);
+//
+//            }
+//        });
+//
+//        XposedHelpers.findAndHookMethod(KeyStore.class,"load", InputStream.class, char[].class, new XC_MethodHook() {
+//            @Override
+//            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+//                XposedBridge.log("KeyStore.load2:"+param.args[0]+ param.args[1]);
+//
+//            }
+//        });
 
         Class ActivityThread = XposedHelpers.findClass("android.app.ActivityThread",loadPackageParam.classLoader);
         XposedBridge.hookAllMethods(ActivityThread, "performLaunchActivity", new XC_MethodHook() {
@@ -314,11 +360,6 @@ public class HookTest implements IXposedHookLoadPackage {
                 XposedBridge.log("found classload is => "+finalCL.toString());
                 String[] classList = getClassNameList(finalCL);
                 for (String className : classList) {
-//                    Log.e(TAG, "CName=>"+ MainActivity.CName);
-//                    Log.e(TAG, "CName=>load"+ load());
-
-
-
                     String claName = load();
                     if(claName!=null&&className.indexOf(claName)!=-1){
                         Log.e(TAG, "class "+className);
@@ -343,91 +384,15 @@ public class HookTest implements IXposedHookLoadPackage {
 
                         Log.e(TAG, "    // declaredMethods");
                         Method[] declaredMethods = clz.getDeclaredMethods();
-                        for (Method m : declaredMethods){
+                        for (Method m : declaredMethods) {
                             int count = m.getParameterCount();
-                            switch (count){
-                                case 0:{
-                                    XposedHelpers.findAndHookMethod(clz, m.getName(), new XC_MethodHook() {
-                                        @Override
-                                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                            Log.e(TAG, "    "+m );
-                                            Log.e(TAG, Log.getStackTraceString(new Throwable()) );
-                                            Log.e(TAG, "    "+m.getReturnType()+" retval: "+param.getResult() );
-                                        }
-                                    });
-                                    break;
-                                }
-                                case 1:{
-                                    XposedHelpers.findAndHookMethod(clz, m.getName(), m.getParameterTypes()[0].getName(), new XC_MethodHook() {
-                                        @Override
-                                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                            Log.e(TAG, "    "+m+" param[0]: "+param.args[0] );
-                                            Log.e(TAG, Log.getStackTraceString(new Throwable()) );
-                                            Log.e(TAG, "    "+m.getReturnType()+"retval: "+param.getResult() );
-                                        }
-                                    });
-                                    break;
-                                }
-                                case 2: {
-                                    XposedHelpers.findAndHookMethod(clz, m.getName(), m.getParameterTypes()[0].getName(), m.getParameterTypes()[1].getName(),
-                                            new XC_MethodHook() {
-                                        @Override
-                                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                            Log.e(TAG, "    "+m+" param[0]: " + param.args[0] + " param[1]: " + param.args[1]);
-                                            Log.e(TAG, Log.getStackTraceString(new Throwable()) );
-                                            Log.e(TAG, "    "+m.getReturnType()+"retval: " + param.getResult());
-                                        }
-                                    });
-                                    break;
-                                }
-                                case 3: {
-                                    XposedHelpers.findAndHookMethod(clz, m.getName(), m.getParameterTypes()[0].getName(), m.getParameterTypes()[1].getName(),
-                                            m.getParameterTypes()[2].getName(), new XC_MethodHook() {
-                                                @Override
-                                                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                                    Log.e(TAG, "    "+m+" param[0]: " + param.args[0] + " param[1]: " + param.args[1] + " param[2]: " + param.args[2]);
-                                                    Log.e(TAG, Log.getStackTraceString(new Throwable()) );
-                                                    Log.e(TAG, "    "+m.getReturnType()+"retval: " + param.getResult());
-                                                }
-                                            });
-                                    break;
-                                }
-                                case 4: {
-                                    XposedHelpers.findAndHookMethod(clz, m.getName(), m.getParameterTypes()[0].getName(), m.getParameterTypes()[1].getName(),
-                                            m.getParameterTypes()[2].getName(), m.getParameterTypes()[3].getName(), new XC_MethodHook() {
-                                                @Override
-                                                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                                    Log.e(TAG, "    "+m+" param[0]: " + param.args[0] + " param[1]: " + param.args[1] +
-                                                            " param[2]: " + param.args[2]+" param[3]: " + param.args[3]);
-                                                    Log.e(TAG, Log.getStackTraceString(new Throwable()) );
-                                                    Log.e(TAG, "    "+m.getReturnType()+"retval: " + param.getResult());
-                                                }
-                                            });
-                                    break;
-                                }
-                                case 5: {
-                                    XposedHelpers.findAndHookMethod(clz, m.getName(), m.getParameterTypes()[0].getName(), m.getParameterTypes()[1].getName(),
-                                            m.getParameterTypes()[2].getName(),  m.getParameterTypes()[3].getName(), m.getParameterTypes()[4].getName(), new XC_MethodHook() {
-                                                @Override
-                                                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                                    Log.e(TAG, "    "+m+" param[0]: " + param.args[0] + " param[1]: " + param.args[1] +
-                                                            " param[2]: " + param.args[2]+" param[3]: " + param.args[3]+" param[4]: " + param.args[4]);
-                                                    Log.e(TAG, Log.getStackTraceString(new Throwable()) );
-                                                    Log.e(TAG, "    "+m.getReturnType()+"retval: " + param.getResult());
-                                                }
-                                            });
-                                    break;
-                                }
-                            }
+                            printDeclaredMethods(clz, m,count);
                         }
                     }
                 }
             }
         });
     }
-
-
-
 }
 
 
