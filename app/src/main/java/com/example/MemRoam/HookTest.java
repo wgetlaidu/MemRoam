@@ -389,7 +389,6 @@ public class HookTest implements IXposedHookLoadPackage {
                             printDeclaredMethods(clz, m,count);
                         }
                     }
-
                 }
             }
         });
