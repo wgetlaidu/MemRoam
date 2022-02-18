@@ -1,21 +1,15 @@
 package com.example.MemRoam;
 import android.app.Application;
-import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 
 import org.apache.commons.io.FileUtils;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -386,7 +380,18 @@ public class HookTest implements IXposedHookLoadPackage {
                         Method[] declaredMethods = clz.getDeclaredMethods();
                         for (Method m : declaredMethods) {
                             int count = m.getParameterCount();
-                            printDeclaredMethods(clz, m,count);
+//                            printDeclaredMethods(clz, m,count);
+                            XposedBridge.hookAllMethods(clz, m.getName(), new XC_MethodHook() {
+                                @Override
+                                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                    Log.w(TAG, m.toString());
+                                    for(int i=0; i<count; i++){
+                                        Log.w(TAG, " parms"+i+"=> "+param.args[i]);
+                                    }
+                                    Log.e(TAG, Log.getStackTraceString(new Throwable()) );
+                                    Log.w(TAG, "retval=> "+param.getResult());
+                                }
+                            });
                         }
                     }
                 }
