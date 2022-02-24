@@ -9,12 +9,30 @@
         android:layout_height="wrap_content"
         android:gravity="left"
         android:singleLine="true"
-        android:hint="输入类名" />
+        android:hint="想要hook的APP类" />
+    <EditText android:id="@+id/system_class"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:singleLine="true"
+        android:hint="想要hook的系统类" />
+    <CheckBox android:id="@+id/on_vpn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="绕过vpn检测"
+        android:onClick="onCheckboxClicked"/>
+    <CheckBox android:id="@+id/dump_cert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="dump证书"
+        android:onClick="onCheckboxClicked"/>
+
     <Button
         android:id="@+id/input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="确定"
         android:textAllCaps="false" />
+
 
 </LinearLayout>
