@@ -14,3 +14,5 @@ adb shell logcat | grep MemoryRoam
 https://github.com/hanbinglengyue/FART
 
 https://github.com/r0ysue/r0capture
+
+https://github.com/w296488320/XposedOkHttpCat
