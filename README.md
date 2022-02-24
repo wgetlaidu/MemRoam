@@ -12,3 +12,5 @@ adb shell logcat | grep MemoryRoam
 
 # 感谢
 https://github.com/hanbinglengyue/FART
+
+https://github.com/r0ysue/r0capture
